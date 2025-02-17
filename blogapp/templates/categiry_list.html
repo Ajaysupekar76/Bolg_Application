@@ -1,0 +1,103 @@
+{% load form_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category List</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Category List</h2>
+    
+    <!-- Add 'id' to the table for DataTable initialization -->
+    <table id="categoryTable" class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">Sr No</th>
+                <th scope="col">Category Name</th>
+                <th scope="col">Image</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% with start_index=categories.number|add:'-1' %}
+                {% for category in categories %}
+                    <tr>
+                        <td>{{ start_index|add:forloop.counter|add:categories.paginator.per_page|add:'-1' }}</td>
+                        <td>{{ category.name }}</td>
+                        <td>
+                            <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-fluid" style="width: 50px; height: 50px;">
+                        </td>
+                        <td>{{ category.get_status_display }}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="window.location.href='{% url 'update_category' category.id %}'">Update</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteCategory({{ category.id }})">Delete</button>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No categories found.</td>
+                    </tr>
+                {% endfor %}
+            {% endwith %}
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls (if not using DataTables pagination) -->
+    <!-- You can remove this section if you prefer DataTables' built-in pagination -->
+   
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        // Initialize DataTable on the category table
+        $('#categoryTable').DataTable();
+    });
+    
+    // Delete category function should be defined outside $(document).ready()
+    function deleteCategory(id) {
+        const confirmation = confirm('Are you sure you want to delete this category?');
+        if (confirmation) {
+            $.ajax({
+                url: '{% url "delete_category" %}',  // Set URL to your delete view
+                type: 'POST',
+                data: {
+                    'category_id': id,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'  // CSRF token for security
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload();  // Refresh the page to show updated category list
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Error deleting category: ' + error);
+                }
+            });
+        }
+    }
+</script>
+
+</body>
+</html>

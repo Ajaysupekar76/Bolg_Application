@@ -1,0 +1,422 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Registration Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .error-message {
+            font-size: 0.875em;
+            color: #dc3545;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+     <!-- Navigation Bar -->
+     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">My Blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bloglist' %}"> Blog List</a>
+                    </li>
+    
+                    <!-- Dropdown Menu for Categories -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Category
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                            <li><a class="dropdown-item" href="{% url 'addcatogiry' %}">Add Category</a></li>
+                            <li><a class="dropdown-item" href="{% url 'catogirylist' %}">Unlist Category</a></li>
+                        </ul>
+                    </li>
+
+                     <!-- Dropdown Menu for Categories -->
+                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Employee Management
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                            <li><a class="dropdown-item" href="{% url 'addemp' %}">Add Employee</a></li>
+                            <li><a class="dropdown-item" href="{% url 'listemp' %}">list Employee</a></li>
+                        </ul>
+                    </li>
+    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Update Employee</h2>
+        <form id="employee-form" method="post" action="{% url 'update_emp' employee.id %}" class="border border-2 rounded-3 p-4 bg-white shadow-sm" novalidate>
+            {% csrf_token %}
+
+
+            
+
+
+
+
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" class="form-control" value="{{ employee.full_name }}" placeholder="Enter Full Name" required>
+                    <div class="error-message text-danger" id="full-name-error"></div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" value="{{ employee.email }}" placeholder="Enter Email Address" required>
+                    <div class="error-message text-danger" id="email-error"></div>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="mobile_number">Mobile Number</label>
+                    <input type="text" id="mobile_number" name="mobile_number" class="form-control" value="{{ employee.mobile_number }}" placeholder="Enter Mobile Number" >
+                    <div class="error-message text-danger" id="mobile-error"></div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select class="form-control" id="gender" name="gender">
+                                <option value="">Select Gender</option>
+                                <option value="Male" {% if employee.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if employee.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if employee.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                            <div class="error-message text-danger" id="gender-error"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="mb-3">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" class="form-control" placeholder="Enter Address" required>{{ employee.address }}</textarea>
+                <div class="error-message text-danger" id="address-error"></div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="country">Country</label>
+                    <select id="country" name="country" class="form-select" required>
+                        <option value="">Select Country</option>
+                        {% for country in countries %}
+                            <option value="{{ country.name }}" {% if employee.country == country.name %}selected{% endif %}>{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="error-message text-danger" id="country-error"></div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="state">State</label>
+                    <select id="state" name="state" class="form-select" required {% if not states %}disabled{% endif %}>
+                        <option value="">Select State</option>
+                        {% for state in states %}
+                            <option value="{{ state.name }}" {% if employee.state == state.name %}selected{% endif %}>{{ state.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="error-message text-danger" id="state-error"></div>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="city">City</label>
+                    <select id="city" name="city" class="form-select" required {% if not cities %}disabled{% endif %}>
+                        <option value="">Select City</option>
+                        {% for city in cities %}
+                            <option value="{{ city.name }}" {% if employee.city == city.name %}selected{% endif %}>{{ city.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="error-message text-danger" id="city-error"></div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="pincode">Pincode</label>
+                    <input type="text" id="pincode" name="pincode" class="form-control" value="{{ employee.pincode }}" placeholder="Enter Pincode" >
+                    <div class="error-message text-danger" id="pincode-error"></div>
+                </div>
+            </div>
+    
+            <div id="education-container">
+                <h4 class="mt-4">Education Details</h4>
+                {% for education in employee.education_details %}
+                    <div class="row education-entry mb-3">
+                        <div class="col-md-3">
+                            <label>Course Name</label>
+                            <input type="text" name="course_name" class="form-control" value="{{ education.course_name }}" placeholder="Course Name" >
+                            <div class="error-message text-danger"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <label>University/Institute</label>
+                            <input type="text" name="university" class="form-control" value="{{ education.university }}" placeholder="University/Institute" >
+                            <div class="error-message text-danger"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Year of Passing</label>
+                            <input type="text" name="passing_year" class="form-control" value="{{ education.passing_year }}" placeholder="YYYY" >
+                            <div class="error-message text-danger"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Percentage</label>
+                            <input type="text" name="percentage" class="form-control" value="{{ education.percentage }}" placeholder="Percentage" >
+                            <div class="error-message text-danger"></div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <button type="button" class="btn btn-danger btn-sm ms-2 remove-education" title="Remove">&times;</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <button type="button" id="add-more-education" class="btn btn-secondary mb-3">Add More Education</button>
+    
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-primary">Update Employee</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#country').change(function() {
+                const countryName = $(this).val();
+                $('#state').prop('disabled', true).html('<option value="">Select State</option>');
+                $('#city').prop('disabled', true).html('<option value="">Select City</option>');
+            
+                if (countryName) {
+                    $.get('/load-states/', { country_name: countryName }, function(data) {
+                        data.states.forEach(state => {
+                            $('#state').append(`<option value="${state.name}">${state.name}</option>`);
+                        });
+                        $('#state').prop('disabled', false);
+                    });
+                }
+            });
+            
+            $('#state').change(function() {
+                const stateName = $(this).val();
+                $('#city').prop('disabled', true).html('<option value="">Select City</option>');
+            
+                if (stateName) {
+                    $.get('/load-cities/', { state_name: stateName }, function(data) {
+                        data.cities.forEach(city => {
+                            $('#city').append(`<option value="${city.name}">${city.name}</option>`);
+                        });
+                        $('#city').prop('disabled', false);
+                    });
+                }
+            });
+            
+            $('#email').on('blur', function() {
+                const email = $(this).val();
+                if (email) {
+                    $.ajax({
+                        url: "{% url 'check_email' %}",
+                        data: { 'email': email },
+                        success: function(data) {
+                            if (data.exists) {
+                                $('#email-error').text('Email already exists. Please use a different email.');
+                            } else {
+                                $('#email-error').text(''); // Clear any previous error message
+                            }
+                        }
+                    });
+                } else {
+                    $('#email-error').text(''); // Clear error message if input is empty
+                }
+            });
+        
+            $('#add-more-education').click(function() {
+                $('#education-container').append(`
+                    <div class="row education-entry mb-3">
+                        <div class="col-md-3">
+                            <label for="course_name">Course Name</label>
+                            <input type="text" name="course_name" class="form-control" placeholder="Course Name" >
+                            <div class="error-message course-name-error"></div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="university">University/Institute</label>
+                            <input type="text" name="university" class="form-control" placeholder="University/Institute" >
+                            <div class="error-message university-error"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="passing_year">Year of Passing</label>
+                            <input type="text" name="passing_year" class="form-control" placeholder="YYYY" >
+                            <div class="error-message passing-year-error"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="percentage">Percentage</label>
+                            <input type="text" name="percentage" class="form-control" placeholder="Percentage" >
+                            <div class="error-message percentage-error"></div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <button type="button" class="btn btn-danger btn-sm ms-2 remove-education" title="Remove">&times;</button>
+                        </div>
+                    </div>
+                `);
+            });
+        
+            $(document).on('click', '.remove-education', function() {
+                $(this).closest('.education-entry').remove();
+            });
+        
+            $('#employee-form').on('submit', function(event) {
+                event.preventDefault(); // Prevent form submission for validation
+                let isValid = true;
+            
+                // Clear previous error messages
+                $('.error-message').text('');
+            
+                const namePattern = /^[A-Z][a-zA-Z\s]*$/; // Must start with a capital letter
+            
+                // Validate Full Name
+                const fullName = $('[name="full_name"]').val();
+                if (!fullName) {
+                    $('#full-name-error').text('Full Name is required.');
+                    isValid = false;
+                } else if (!namePattern.test(fullName)) {
+                    $('#full-name-error').text('Full Name must start with a capital letter and contain only letters.');
+                    isValid = false;
+                }
+            
+                // Validate Email
+                const email = $('#email').val().trim();
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email || !emailPattern.test(email)) {
+                    $('#email-error').text('A valid Email is required.');
+                    isValid = false;
+                }
+            
+                // Validate Mobile Number
+                const mobileNumber = $('#mobile_number').val().trim();
+                const mobilePattern = /^[0-9]{10}$/; // 10 digits
+                if (!mobileNumber || !mobilePattern.test(mobileNumber)) {
+                    $('#mobile-error').text('Mobile Number must be 10 digits.');
+                    isValid = false;
+                }
+            
+                // Validate Gender
+                if ($('#gender').val() === "") {
+                    $('#gender-error').text('Gender is required.');
+                    isValid = false;
+                }
+            
+                // Validate Address
+                const address = $('#address').val().trim();
+                if (!address) {
+                    $('#address-error').text('Address is required.');
+                    isValid = false;
+                }
+            
+                // Validate Country    
+                const country = $('#country').val();
+                if (!country) {
+                    $('#country-error').text('Country is required.');
+                    isValid = false;
+                }
+            
+                // Validate State
+                const state = $('#state').val();
+                if (!state) {
+                    $('#state-error').text('State is required.');
+                    isValid = false;
+                }
+            
+                // Validate City
+                const city = $('#city').val();
+                if (!city) {
+                    $('#city-error').text('City is required.');
+                    isValid = false;
+                }
+            
+                // Validate Pincode
+                const pincode = $('#pincode').val().trim();
+                const pincodePattern = /^[0-9]{6}$/; // 6 digits
+                if (!pincode) {
+                    $('#pincode-error').text('Pincode is required.');
+                    isValid = false;
+                } else if (!pincodePattern.test(pincode)) {
+                    $('#pincode-error').text('Pincode must be 6 digits.');
+                    isValid = false;
+                }
+            
+                // Validate Education Fields
+                $('#education-container .education-entry').each(function() {
+                    const courseName = $(this).find('input[name="course_name"]').val().trim();
+                    const university = $(this).find('input[name="university"]').val().trim();
+                    const passingYear = $(this).find('input[name="passing_year"]').val().trim();
+                    const percentage = $(this).find('input[name="percentage"]').val().trim();
+            
+                    let entryValid = true; // Track if the current entry is valid
+            
+                    if (!courseName) {
+                        $(this).find('.course-name-error').text('Course Name is required.');
+                        entryValid = false;
+                    }
+                    if (!university) {
+                        $(this).find('.university-error').text('University/Institute is required.');
+                        entryValid = false;
+                    }
+                    if (!passingYear) {
+                        $(this).find('.passing-year-error').text('Year of Passing is required.');
+                        entryValid = false;
+                    } else if (!/^\d{4}$/.test(passingYear)) {
+                        $(this).find('.passing-year-error').text('Year of Passing must be in YYYY format.');
+                        entryValid = false;
+                    }
+                    if (!percentage) {
+                        $(this).find('.percentage-error').text('Percentage is required.');
+                        entryValid = false;
+                    }
+            
+                    if (!entryValid) {
+                        isValid = false; // If any field in this entry is invalid, set isValid to false
+                    }
+                });
+            
+                // If valid, submit the form
+                if (isValid) {
+                    alert('Employee updated successfully!'); // Success message
+                    this.submit();
+                }
+            });
+            
+        });
+        </script>
+        
+ <!-- jQuery -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <!-- Bootstrap JS -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+ <!-- DataTables JS -->
+ <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+ <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+

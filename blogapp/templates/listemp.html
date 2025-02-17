@@ -1,0 +1,175 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">My Blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bloglist' %}">Blog List</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Category</a>
+                        <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+                            <li><a class="dropdown-item" href="{% url 'addcatogiry' %}">Add Category</a></li>
+                            <li><a class="dropdown-item" href="{% url 'catogirylist' %}">Unlist Category</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="employeeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Employee Management</a>
+                        <ul class="dropdown-menu" aria-labelledby="employeeDropdown">
+                            <li><a class="dropdown-item" href="{% url 'addemp' %}">Add Employee</a></li>
+                            <li><a class="dropdown-item" href="{% url 'listemp' %}">List Employee</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 pt-4">
+        <h2>Employee List</h2>
+
+        <table id="employeeTable" class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Sr No</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Mobile Number</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">State</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Education</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                    <tr id="employee-{{ employee.id }}">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ employee.full_name }}</td>
+                        <td>{{ employee.email }}</td>
+                        <td>{{ employee.mobile_number }}</td>
+                        <td>{{ employee.gender }}</td>
+                        <td>{{ employee.address }}</td>
+                        <td>{{ employee.country }}</td>
+                        <td>{{ employee.state }}</td>
+                        <td>{{ employee.city }}</td>
+                        <td>
+                            <!-- Toggle button for education details -->
+                            <button class="btn btn-info btn-sm" data-bs-toggle="collapse" data-bs-target="#education-{{ forloop.counter }}">View Education</button>
+                            <!-- Education Details (collapsible section as a nested table) -->
+                            <div id="education-{{ forloop.counter }}" class="collapse mt-2">
+                                <table class="table table-sm table-bordered">
+                                    <thead class="table-secondary">
+                                        <tr>
+                                            <th scope="col">Course Name</th>
+                                            <th scope="col">University/Institute</th>
+                                            <th scope="col">Year of Passing</th>
+                                            <th scope="col">Percentage/Class Obtained</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for edu in employee.education_details %}
+                                            <tr>
+                                                <td>{{ edu.course_name }}</td>
+                                                <td>{{ edu.university }}</td>
+                                                <td>{{ edu.passing_year }}</td>
+                                                <td>{{ edu.percentage }}%</td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="4" class="text-center">No education details available.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton-{{ forloop.counter }}" data-bs-toggle="dropdown" aria-expanded="false">⋮</button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ forloop.counter }}">
+                                    <li><a class="dropdown-item" href="{% url 'update_emp' employee.id %}">Update</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="deleteEmployee({{ employee.id }})">Delete</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center">No employees found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button class="btn btn-success mt-3" onclick="window.location.href='{% url 'addemp' %}'">Add Employee</button>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable on the employee table
+            $('#employeeTable').DataTable({
+                "pageLength": 5,
+                "ordering": true,
+                "searching": true,
+                "paging": true,
+                "scrollX": true,
+                "lengthMenu": [5, 10, 25, 50, 100],
+                "responsive": true
+            });
+        });
+
+        function deleteEmployee(empId) {
+            if (confirm("Are you sure you want to delete this employee?")) {
+                $.ajax({
+                    url: `/soft_delete_employee/${empId}/`,  // Update URL as per Django view
+                    method: "POST",
+                    headers: {'X-CSRFToken': '{{ csrf_token }}'},  // Add CSRF token
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            // Remove the row of the deleted employee without reloading the page
+                            $(`#employee-${empId}`).closest('tr').fadeOut('slow', function() {
+                                $(this).remove();
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
