@@ -1,0 +1,51 @@
+# Virtual Environment
+.env
+env/
+venv/
+myenv/
+.venv/
+envv/
+.envv/
+.myenv
+
+# Django
+db.sqlite3
+/media/
+static/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Celery
+utils/celery/celerybeat-schedule.*
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Local development settings
+local_settings.py
+*.local.py
+
+# Database backups
+*.bak
+*.dump
+*.sql
+
+# Logs
+*.log
+logs/

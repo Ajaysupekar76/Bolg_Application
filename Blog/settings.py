@@ -74,15 +74,14 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # MySQL backend
-        'NAME': 'blogs',     # Replace with your MySQL database name
-        'USER': 'root',          # Replace with your MySQL username
-        'PASSWORD': '1234',      # Replace with your MySQL password
-        'HOST': 'localhost',                     # Usually localhost
-        'PORT': '3306',                         # Default MySQL port
+        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL backend
+        'NAME': 'blogs',        # Replace with your PostgreSQL database name
+        'USER': 'postgres',     # Replace with your PostgreSQL username
+        'PASSWORD': '1234',     # Replace with your PostgreSQL password
+        'HOST': 'localhost',    # Usually localhost
+        'PORT': '5432',         # Default PostgreSQL port
     }
 }
 
