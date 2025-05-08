@@ -77,11 +77,11 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL backend
-        'NAME': 'blogs',        # Replace with your PostgreSQL database name
+        'NAME': 'railway',        # Replace with your PostgreSQL database name
         'USER': 'postgres',     # Replace with your PostgreSQL username
-        'PASSWORD': '1234',     # Replace with your PostgreSQL password
-        'HOST': 'localhost',    # Usually localhost
-        'PORT': '5432',         # Default PostgreSQL port
+        'PASSWORD': 'tqAufAItamkmdXdKbrOQJXNVQJdBKNEu',     # Replace with your PostgreSQL password
+        'HOST': 'trolley.proxy.rlwy.net',    # Usually localhost
+        'PORT': '45854',         # Default PostgreSQL port
     }
 }
 
