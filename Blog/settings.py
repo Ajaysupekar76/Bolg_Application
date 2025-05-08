@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-bim4!-w39nyj2g68k3dsl11%^u-w)o(#ra7edlhm!_s297be=m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['bolg-application.onrender.com', 'localhost', '127.0.0.1:8000']
 
 
 # Application definition
