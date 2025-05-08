@@ -74,14 +74,15 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL backend
-        'NAME': 'railway',        # Replace with your PostgreSQL database name
-        'USER': 'postgres',     # Replace with your PostgreSQL username
-        'PASSWORD': 'tqAufAItamkmdXdKbrOQJXNVQJdBKNEu',     # Replace with your PostgreSQL password
-        'HOST': 'trolley.proxy.rlwy.net',    # Usually localhost
-        'PORT': '45854',         # Default PostgreSQL port
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('railway'),
+        'USER': os.environ.get('postgres'),
+        'PASSWORD': os.environ.get('tqAufAItamkmdXdKbrOQJXNVQJdBKNEu'),
+        'HOST': os.environ.get('trolley.proxy.rlwy.net'),
+        'PORT': os.environ.get('45854'),
     }
 }
 
