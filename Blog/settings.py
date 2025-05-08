@@ -75,16 +75,27 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+import environ
+import os
+
+env = environ.Env()
+environ.Env.read_env()  # reads from .env file
+
+
+import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('railway'),
-        'USER': os.environ.get('postgres'),
-        'PASSWORD': os.environ.get('tqAufAItamkmdXdKbrOQJXNVQJdBKNEu'),
-        'HOST': os.environ.get('trolley.proxy.rlwy.net'),
-        'PORT': os.environ.get('45854'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
